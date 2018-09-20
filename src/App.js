@@ -3,12 +3,16 @@ import Note from './components/Note';
 import './App.css';
 
 class App extends Component {
+  componentDidMount() {
+    this.textInput.current.focus();
+  }
   constructor(props){
     super(props);
     this.state = {
       noteText: '',
       notes: []
     }
+    this.textInput = React.createRef(); //crating a ref so we can 'reference' it to '.focus' anywhere
   }
   updateNoteText(event) {
     this.setState({noteText: event.target.value})
@@ -23,7 +27,7 @@ class App extends Component {
     let notesArr = this.state.notes;
     notesArr.push(this.state.noteText);
     this.setState({noteText: ''});
-    this.textInput.focus();
+    this.textInput.current.focus();
   }
   deleteNote(index) {
     let notesArr = this.state.notes;
@@ -44,7 +48,7 @@ class App extends Component {
           value={this.state.noteText}
           onChange={noteText => this.updateNoteText(noteText)}
           onKeyPress={this.handleKeyPress.bind(this)}
-          ref={((input) => {this.textInput = input})}/>
+          ref={this.textInput}/>
       </div>
     );
   }
