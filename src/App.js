@@ -9,13 +9,14 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      noteText: '',
+      //noteText: '',
       notes: []
     }
     this.textInput = React.createRef(); //crating a ref so we can 'reference' it to '.focus' anywhere
   }
   updateNoteText(event) {
-    this.setState({noteText: event.target.value})
+    //we don't need to constantly force a state change to get each piece of a note as it's being typed
+    //this.setState({noteText: event.target.value})
   }
   handleKeyPress(event) {
     if (event.key === 'Enter') {
@@ -23,10 +24,14 @@ class App extends Component {
     }
   }
   addNote() {
-    if (this.state.noteText === ''){return}
-    let notesArr = this.state.notes;
-    notesArr.push(this.state.noteText);
-    this.setState({noteText: ''});
+    const noteText = this.textInput.current.value
+    if (noteText === ''){return}
+    this.setState({
+      //this pushes the new note to our note array and prompts state change, 
+      //making render put the new note on screen all in one
+      notes: this.state.notes.concat([noteText])
+    });
+    this.textInput.current.value = "";
     this.textInput.current.focus();
   }
   deleteNote(index) {
@@ -35,6 +40,7 @@ class App extends Component {
     this.setState({notes: notesArr});
   }
   render() {
+    console.log(this.state.notes);
     let notes = this.state.notes.map((v,k) => {
       return <Note key={k} text={v}
                 deleteMethod={() => this.deleteNote(k)}/>
@@ -45,9 +51,9 @@ class App extends Component {
         {notes}
         <div className="btn" onClick={this.addNote.bind(this)}>+</div>
         <input type="text" className="text-input" 
-          value={this.state.noteText}
-          onChange={noteText => this.updateNoteText(noteText)}
           onKeyPress={this.handleKeyPress.bind(this)}
+          //value={this.state.noteText}
+          onChange={noteText => this.updateNoteText(noteText)}
           ref={this.textInput}/>
       </div>
     );
