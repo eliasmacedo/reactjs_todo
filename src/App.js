@@ -40,7 +40,6 @@ class App extends Component {
     this.setState({notes: notesArr});
   }
   render() {
-    console.log(this.state.notes);
     let notes = this.state.notes.map((v,k) => {
       return <Note key={k} text={v}
                 deleteMethod={() => this.deleteNote(k)}/>
